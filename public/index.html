@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Record Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="nav-brand">
+          <span class="brand-dot"></span>
+          <span class="brand-text">BBOY</span>
+          <span class="brand-sub">Student Record Management</span>
+        </div>
+
+        <div class="nav-right" id="navRight">
+          <a href="#">Dashboard</a>
+          <a href="#students-section">Students</a>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+          >
+            <span id="themeIcon">Dark</span>
+          </button>
+        </div>
+
+        <button class="burger" id="burgerBtn" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#" onclick="closeMobileMenu()">Dashboard</a>
+        <a href="#students-section" onclick="closeMobileMenu()">Students</a>
+        <button class="theme-toggle mobile-theme" id="themeToggleMobile">
+          <span id="themeIconMobile">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="chart-row glass">
+        <div class="chart-total">
+          <p class="stat-label">Total Students</p>
+          <p class="chart-total-value" id="statTotal">0</p>
+          <p class="chart-total-sub">enrolled</p>
+        </div>
+
+        <div class="chart-divider"></div>
+
+        <div class="chart-block">
+          <p class="stat-label">By Course</p>
+          <div class="chart-wrapper">
+            <canvas id="courseChart"></canvas>
+          </div>
+          <div class="chart-legend" id="courseLegend"></div>
+        </div>
+
+        <div class="chart-divider"></div>
+
+        <div class="chart-block">
+          <p class="stat-label">By Year Level</p>
+          <div class="chart-wrapper">
+            <canvas id="yearChart"></canvas>
+          </div>
+          <div class="chart-legend" id="yearLegend"></div>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="form-panel glass" id="formPanel">
+          <div class="panel-header">
+            <h2 id="formTitle">Add Student</h2>
+            <span class="panel-tag" id="formTag">New Record</span>
+          </div>
+
+          <form id="studentForm">
+            <div class="form-group">
+              <label for="student_number">Student Number</label>
+              <input
+                type="text"
+                id="student_number"
+                placeholder="2023123456"
+                maxlength="10"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input type="text" id="first_name" placeholder="Juan" required />
+            </div>
+
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input
+                type="text"
+                id="last_name"
+                placeholder="Dela Cruz"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="course">Course</label>
+              <select id="course" required>
+                <option value="">Select Course</option>
+                <option value="BSIT">BSIT</option>
+                <option value="BSCS">BSCS</option>
+                <option value="BSTCM">BSTCM</option>
+                <option value="BSDS">BSDS</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="year_level">Year Level</label>
+              <select id="year_level" required>
+                <option value="">Select Year</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="submitBtn">
+                Save Record
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost"
+                id="cancelEditBtn"
+                style="display: none"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="table-section glass" id="students-section">
+          <div class="panel-header">
+            <h2>Student Records</h2>
+            <span class="panel-tag" id="studentCount">0 entries</span>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-wrapper">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search name or student number..."
+              />
+            </div>
+            <select id="courseFilter">
+              <option value="all">All Courses</option>
+              <option value="BSIT">BSIT</option>
+              <option value="BSCS">BSCS</option>
+              <option value="BSTCM">BSTCM</option>
+              <option value="BSDS">BSDS</option>
+            </select>
+          </div>
+
+          <div class="table-wrapper" id="tableWrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th class="sortable" data-col="student_number">
+                    Student No.
+                    <span class="sort-icon" id="sort-student_number">↕</span>
+                  </th>
+                  <th class="sortable" data-col="last_name">
+                    Full Name
+                    <span class="sort-icon" id="sort-last_name">↕</span>
+                  </th>
+                  <th class="sortable" data-col="course">
+                    Course <span class="sort-icon" id="sort-course">↕</span>
+                  </th>
+                  <th class="sortable" data-col="year_level">
+                    Year <span class="sort-icon" id="sort-year_level">↕</span>
+                  </th>
+                  <th class="sortable" data-col="created_at">
+                    Date Added
+                    <span class="sort-icon" id="sort-created_at">↕</span>
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <div class="page-size-control">
+              <span>Show</span>
+              <button class="size-btn active" data-size="5">5</button>
+              <button class="size-btn" data-size="10">10</button>
+              <span>rows</span>
+            </div>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p>Copy Right &copy; Jan Mark Torres | Bboy 2026</p>
+    </footer>
+
+    <div id="toast"></div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
